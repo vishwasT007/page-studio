@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js
+.next/
+out/
+build/
+
+# Environment variables — never commit real secrets
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Test results
+test-results/
+playwright-report/
+coverage/
+a11y-report.json
+
+# Misc
+.DS_Store
+*.pem
+.vercel
