@@ -6,7 +6,12 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { toast } from '@/components/ui/use-toast'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { publishPage, selectPublishStatus, selectLatestRelease } from '@/store/slices/publishSlice'
+import {
+  publishPage,
+  selectPublishError,
+  selectPublishStatus,
+  selectLatestRelease,
+} from '@/store/slices/publishSlice'
 import { selectIsDirty, markClean } from '@/store/slices/draftPageSlice'
 
 type Props = { slug: string }
@@ -15,6 +20,7 @@ export function PublishButton({ slug }: Props) {
   const dispatch = useAppDispatch()
   const status = useAppSelector(selectPublishStatus)
   const release = useAppSelector(selectLatestRelease)
+  const error = useAppSelector(selectPublishError)
   const isDirty = useAppSelector(selectIsDirty)
 
   useEffect(() => {
@@ -31,10 +37,10 @@ export function PublishButton({ slug }: Props) {
       toast({
         variant: 'destructive',
         title: 'Publish failed',
-        description: 'Check the console for details.',
+        description: error ?? 'Check the console for details.',
       })
     }
-  }, [status, release, dispatch])
+  }, [status, release, error, dispatch])
 
   function handlePublish() {
     dispatch(publishPage({ slug }))

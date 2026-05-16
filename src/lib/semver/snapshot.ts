@@ -5,6 +5,20 @@ import { bumpVersion, INITIAL_VERSION } from './version'
 import { comparePages } from './diff'
 
 const PREFIX = 'releases'
+const BLOB_TOKEN_NAME = 'BLOB_READ_WRITE_TOKEN'
+
+export class PublishStorageConfigError extends Error {
+  constructor() {
+    super(`Publishing storage is not configured. Add ${BLOB_TOKEN_NAME} in Vercel.`)
+    this.name = 'PublishStorageConfigError'
+  }
+}
+
+function assertBlobStorageConfigured() {
+  if (!process.env[BLOB_TOKEN_NAME]) {
+    throw new PublishStorageConfigError()
+  }
+}
 
 async function readRelease(downloadUrl: string): Promise<Release | null> {
   try {
@@ -17,6 +31,8 @@ async function readRelease(downloadUrl: string): Promise<Release | null> {
 }
 
 async function getLatestRelease(slug: string): Promise<Release | null> {
+  assertBlobStorageConfigured()
+
   const { blobs } = await list({ prefix: `${PREFIX}/${slug}/` })
 
   const sorted = blobs
@@ -38,6 +54,8 @@ async function getLatestRelease(slug: string): Promise<Release | null> {
 }
 
 export async function publishSnapshot(draft: Page): Promise<Release> {
+  assertBlobStorageConfigured()
+
   const checksum = hashPageSync(draft)
   const latest = await getLatestRelease(draft.slug)
 
@@ -70,12 +88,15 @@ export async function publishSnapshot(draft: Page): Promise<Release> {
     access: 'public',
     contentType: 'application/json',
     allowOverwrite: true,
+    addRandomSuffix: false,
   })
 
   return release
 }
 
 export async function getRelease(slug: string, version: string): Promise<Release | null> {
+  assertBlobStorageConfigured()
+
   const { blobs } = await list({ prefix: `${PREFIX}/${slug}/${version}.json` })
   if (blobs.length === 0) return null
   return readRelease(blobs[0].downloadUrl)

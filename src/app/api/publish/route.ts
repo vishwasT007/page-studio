@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { z } from 'zod'
 import { PageSchema } from '@/lib/schemas/page.schema'
-import { publishSnapshot } from '@/lib/semver/snapshot'
+import { PublishStorageConfigError, publishSnapshot } from '@/lib/semver/snapshot'
 import { verifySessionToken, SESSION_COOKIE } from '@/lib/auth/session'
 import { hasRole } from '@/lib/auth/roles'
 
@@ -44,6 +44,10 @@ export async function POST(request: NextRequest) {
     const release = await publishSnapshot(pageParsed.data)
     return NextResponse.json(release, { status: 200 })
   } catch (err) {
+    if (err instanceof PublishStorageConfigError) {
+      return NextResponse.json({ error: err.message }, { status: 503 })
+    }
+
     console.error('[publish] Snapshot failed:', err)
     return NextResponse.json({ error: 'Publish failed' }, { status: 500 })
   }

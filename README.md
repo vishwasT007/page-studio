@@ -29,6 +29,7 @@ You don't need a Contentful account to run the app. The `demo` slug is backed by
 ```env
 # Required
 AUTH_SECRET=your-secret-at-least-32-chars
+BLOB_READ_WRITE_TOKEN=vercel-blob-read-write-token
 
 # Optional — app falls back to demo data if these are absent
 CONTENTFUL_SPACE_ID=
@@ -85,7 +86,7 @@ Clicking Publish sends the current Redux draft to `POST /api/publish`. The serve
 3. Hashes the page to check if it's identical to the last release — if so, returns the existing release without writing anything (idempotent)
 4. Diffs the new page against the last release to figure out what changed
 5. Bumps the version according to the rules below
-6. Writes an immutable JSON file to `releases/<slug>/<version>.json`
+6. Writes an immutable JSON file to Vercel Blob at `releases/<slug>/<version>.json`
 
 ### Version bump rules
 
@@ -102,7 +103,7 @@ The initial version is always `1.0.0`. There's no way to get a `0.x` version —
 
 ### Storage
 
-Releases live in `releases/` as plain JSON files. This works fine for local dev and single-instance deployments. On Vercel (ephemeral filesystem) you'd swap the two functions in `snapshot.ts` that read and write files with Vercel KV, Vercel Blob, or a database. The `publishSnapshot(draft)` interface doesn't change — only those two functions.
+Releases live in Vercel Blob as plain JSON files under the `releases/` prefix. On Vercel, connect a Blob store to the project so `BLOB_READ_WRITE_TOKEN` is available to serverless functions. Locally, add the same token to `.env.local` if you want publish actions to persist.
 
 ---
 
@@ -227,7 +228,7 @@ src/
 
 **Feature item editing** — The feature grid section has a `features` array but the studio only exposes the heading and subheading. Editing individual feature items would need a list editor widget; it's a UI scope decision, not an architectural one — the schema and data model fully support it.
 
-**Filesystem releases on Vercel** — The `releases/` directory approach won't work on Vercel's ephemeral filesystem. The fix is two functions in `snapshot.ts`; the rest of the codebase is unaffected.
+**Publishing storage** — Release snapshots use Vercel Blob. A missing `BLOB_READ_WRITE_TOKEN` will make `/api/publish` return a storage configuration error.
 
 **Single browser in E2E** — CI runs Playwright tests against Chromium only. Firefox and WebKit would give broader coverage.
 

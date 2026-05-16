@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     default: 'Page Studio',
   },
   description: 'Schema-driven landing page builder with versioned publishing.',
+  icons: {
+    icon: '/icon.svg',
+  },
 }
 
 type Props = { children: React.ReactNode }

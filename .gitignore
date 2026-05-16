@@ -19,6 +19,7 @@ test-results/
 playwright-report/
 coverage/
 a11y-report.json
+*.tsbuildinfo
 
 # Misc
 .DS_Store

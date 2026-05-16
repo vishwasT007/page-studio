@@ -30,8 +30,11 @@ export const publishPage = createAsyncThunk<Release, { slug: string }>(
     })
 
     if (!response.ok) {
-      const body = (await response.json().catch(() => ({}))) as { error?: string }
-      return rejectWithValue(body.error ?? 'Publish failed')
+      const body = (await response.json().catch(() => ({}))) as {
+        error?: string
+        message?: string
+      }
+      return rejectWithValue(body.error ?? body.message ?? 'Publish failed')
     }
 
     return (await response.json()) as Release
