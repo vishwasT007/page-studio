@@ -45,6 +45,24 @@ Generate a suitable `AUTH_SECRET` with `openssl rand -base64 32`.
 
 ---
 
+## CI/CD
+
+GitHub Actions runs type checks, ESLint, unit tests, E2E tests, and accessibility checks on pushes and pull requests to `main`.
+
+Production deployment is handled by `.github/workflows/deploy.yml`. It starts after the `CI` workflow succeeds on `main`, uses the official Vercel CLI, builds with `vercel build --prod`, and deploys the prebuilt output with `vercel deploy --prebuilt --prod`.
+
+Add these GitHub repository secrets before relying on the deploy workflow:
+
+```env
+VERCEL_TOKEN=
+VERCEL_ORG_ID=
+VERCEL_PROJECT_ID=
+```
+
+Keep runtime app secrets such as `AUTH_SECRET`, `CONTENTFUL_*`, and `BLOB_READ_WRITE_TOKEN` in the Vercel project environment variables. The deploy workflow pulls those settings from Vercel during the production build.
+
+---
+
 ## How the editor works
 
 When you open the studio, the page is loaded from Contentful (or demo data) and put into a Redux draft. From there everything is local — every edit dispatches a Redux action, the preview re-renders instantly from the store, and nothing hits the server until you click Publish.

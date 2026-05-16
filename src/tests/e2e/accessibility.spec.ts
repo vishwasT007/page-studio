@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, type Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
@@ -6,10 +6,7 @@ import path from 'path'
 // Collects all axe results so we can write a combined report at the end
 const allResults: Record<string, unknown>[] = []
 
-async function runAxeAndAssert(
-  page: Parameters<typeof AxeBuilder>[0],
-  label: string
-) {
+async function runAxeAndAssert(page: Page, label: string) {
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
     .analyze()

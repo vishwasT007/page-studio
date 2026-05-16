@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { z } from 'zod'
-import type { Role } from '@/types'
 import { DEMO_USERS } from '@/lib/auth/roles'
 import { createSessionToken, SESSION_COOKIE, SESSION_DURATION } from '@/lib/auth/session'
 

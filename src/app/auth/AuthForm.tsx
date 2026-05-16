@@ -43,7 +43,7 @@ export function AuthForm() {
     })
     if (res.ok) {
       // Hard navigate so the server re-reads the new session cookie immediately
-      window.location.href = callbackUrl
+      window.location.assign(callbackUrl)
     } else {
       setLoading(null)
     }
