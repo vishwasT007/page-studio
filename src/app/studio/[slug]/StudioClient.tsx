@@ -44,6 +44,7 @@ export function StudioClient({ initialPage, user }: Props) {
       {/* Sidebar */}
       {sidebarOpen && (
         <aside
+          role="region"
           className="flex w-72 shrink-0 flex-col border-r bg-card"
           aria-label="Studio sidebar"
         >
@@ -146,6 +147,7 @@ export function StudioClient({ initialPage, user }: Props) {
           {/* Props editor — hidden in preview mode */}
           {!previewMode && canEdit && (
             <aside
+              role="region"
               className="w-72 shrink-0 overflow-y-auto border-l bg-card px-4 py-4"
               aria-label="Section properties editor"
             >

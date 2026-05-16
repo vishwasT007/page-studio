@@ -53,8 +53,8 @@ test.describe('Studio — editor flow', () => {
     await expect(page.getByRole('button', { name: /publish page/i })).toBeVisible()
   })
 
-  test('publish button is absent for editor', async ({ page, request }) => {
-    await request.post('/api/auth/login', { data: { role: 'editor' } })
+  test('publish button is absent for editor', async ({ page }) => {
+    await page.request.post('/api/auth/login', { data: { role: 'editor' } })
     await page.goto('/studio/demo')
     await expect(page.getByRole('button', { name: /publish/i })).toHaveCount(0)
   })
