@@ -48,7 +48,8 @@ export type SectionPropsMap = {
 
 export type Section = {
   id: string
-  type: SectionType
+  // External CMS data may include section types this build does not know yet.
+  type: string
   props: Record<string, unknown>
 }
 

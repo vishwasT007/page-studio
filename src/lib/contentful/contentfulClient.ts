@@ -1,4 +1,4 @@
-import { createClient, type ContentfulClientApi, type EntrySkeletonType } from 'contentful'
+import { createClient } from 'contentful'
 
 type ClientMode = 'published' | 'preview'
 
@@ -6,7 +6,7 @@ type ClientMode = 'published' | 'preview'
 // Switching environments (preview vs published) is entirely handled here.
 export function getContentfulClient(
   mode: ClientMode = 'published'
-): ContentfulClientApi<EntrySkeletonType> {
+) {
   const spaceId = process.env.CONTENTFUL_SPACE_ID
   const environment = process.env.CONTENTFUL_ENVIRONMENT ?? 'master'
 

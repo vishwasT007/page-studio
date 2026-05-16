@@ -27,7 +27,7 @@ const FEATURES = [
     href: '/studio/demo',
     cta: 'Try publishing',
   },
-]
+] as const
 
 export default function HomePage() {
   return (
